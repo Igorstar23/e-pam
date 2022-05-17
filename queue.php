@@ -42,17 +42,30 @@
             ."ON(MT.ID_USER = U.ID) WHERE MT.STATUS NOT IN ('HANDLE', 'DONE') ORDER BY MT.ID DESC";
             
             $queue = mysqli_query($conn, $sql);
+            
+            $row = mysqli_fetch_array($queue);
+            $arr = array(0 => array($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]));
+
+            for ($i = 1; $i < $count_rows; $i++) {
+                 $row = mysqli_fetch_array($queue);
+                 $arr[$i][0] = $row[0];
+                 $arr[$i][1] = $row[1];
+                 $arr[$i][2] = $row[2];
+                 $arr[$i][3] = $row[3];
+                 $arr[$i][4] = $row[4];
+                 $arr[$i][5] = $row[5];
+            }
 
             for ($i = ($page - 1) * DEF_COUNT_ROWS; $i < $count_rows; $i++) {
-                 $row = $row = mysqli_fetch_array($queue);
 
                  if ($i >= DEF_COUNT_ROWS * $page) break;
-                 echo "<td>".$row[0]."</td>";
-                 echo "<td>".$row[1]."</td>";
-                 echo "<td>".$row[2]."</td>";
-                 echo "<td>".$row[3]."</td>";
-                 echo "<td>".$row[4]."</td>";
-                 echo "<td>".$row[5]."</td>";
+                 
+                 echo "<td>".$arr[$i][0]."</td>";
+                 echo "<td>".$arr[$i][1]."</td>";
+                 echo "<td>".$arr[$i][2]."</td>";
+                 echo "<td>".$arr[$i][3]."</td>";
+                 echo "<td>".$arr[$i][4]."</td>";
+                 echo "<td>".$arr[$i][5]."</td>";
                  echo "</tr>";
             }
 
@@ -69,6 +82,7 @@
             }
 
             $prev = ($page - 1 == 0)? 1 : $page - 1;
+            echo "<p class='form-title' style='text-align: center; font-size: 17px'>"."current page =".$page."</p>";
             echo "<a class='form-title' href='http://localhost/Space/queue.php?page=".$prev."'>&laquo; </a>";
             for ($i = 1; $i <= $pages; $i++) {
                  echo "<a class='form-title' href='http://localhost/Space/queue.php?page=".$i."'>".$i."; </a>";
